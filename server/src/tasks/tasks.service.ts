@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/configs/database-config/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -40,6 +41,38 @@ export class TasksService {
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(error);
+    }
+  }
+
+  async markTaskAsCompleted(id: string) {
+    try {
+      // Check if task exists
+      const existingTask = await this.prisma.task.findUnique({ where: { id } });
+      if (!existingTask) {
+        throw new NotFoundException(`Task with ID ${id} not found`);
+      }
+
+      if (existingTask.isCompleted) {
+        throw new BadRequestException('Task is already completed');
+      }
+
+      // Update isCompleted -> true
+      const updatedTask = await this.prisma.task.update({
+        where: { id },
+        data: { isCompleted: true },
+      });
+
+      return updatedTask;
+    } catch (error) {
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'Failed to mark task as completed',
+      );
     }
   }
 }

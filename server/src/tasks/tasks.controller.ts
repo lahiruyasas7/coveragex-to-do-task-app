@@ -4,6 +4,8 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -25,5 +27,19 @@ export class TasksController {
   findRecent(@Query('limit') limit?: string) {
     const l = limit ? parseInt(limit, 10) : 5;
     return this.tasksService.findRecentTasks(l);
+  }
+
+  /**
+   * PATCH /tasks/:id/complete
+   * Marks a task as completed (isCompleted = true)
+   */
+  @Patch(':id/complete')
+  async markAsCompleted(@Param('id') id: string) {
+    const updatedTask = await this.tasksService.markTaskAsCompleted(id);
+    return {
+      success: true,
+      message: 'Task marked as completed',
+      data: updatedTask,
+    };
   }
 }
