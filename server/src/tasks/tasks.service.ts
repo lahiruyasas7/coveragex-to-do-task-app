@@ -27,4 +27,19 @@ export class TasksService {
       throw new InternalServerErrorException(error);
     }
   }
+
+  //find most recent 5 tasks by default. if limit is provided can be changed
+  async findRecentTasks(limit = 5) {
+    try {
+      const result = await this.prisma.task.findMany({
+        where: { isCompleted: false },
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+      });
+      return result;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
 }
