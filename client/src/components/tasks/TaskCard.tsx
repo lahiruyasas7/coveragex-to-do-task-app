@@ -1,12 +1,22 @@
 // src/components/tasks/TaskCard.tsx
 import React from "react";
-import type { Task, TaskFormInputs } from "../../types/common";
+import type { Task } from "../../types/common";
+import { useDispatch } from "react-redux";
+import { markAsDone } from "../../redux/tasks/tasksSlice";
 
 interface TaskCardProps {
   task: Task;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+  const dispatch = useDispatch();
+  const markAsDoneHandler = () => {
+    if (task) {
+      console.log("Marking as done:", task.id);
+      dispatch(markAsDone(task.id));
+    }
+  };
+
   return (
     <div className="w-full bg-gray-100 dark:bg-gray-700 shadow-sm rounded-xl p-4 flex items-start justify-between hover:shadow-md transition">
       <div>
@@ -20,6 +30,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 
       <button
         className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+        onClick={markAsDoneHandler}
       >
         Done
       </button>
