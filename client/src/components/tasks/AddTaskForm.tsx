@@ -4,8 +4,10 @@ import type { SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { TaskFormInputs } from "../../types/common";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createTask } from "../../redux/tasks/tasksSlice";
+import type { RootState } from "../../redux/store";
+import Button from "../Button";
 
 // --- Yup validation schema ---
 const taskSchema = yup.object({
@@ -13,6 +15,7 @@ const taskSchema = yup.object({
 });
 
 const AddTaskForm: React.FC = () => {
+  const { loading } = useSelector((state: RootState) => state.tasks);
   const {
     register,
     handleSubmit,
@@ -79,19 +82,13 @@ const AddTaskForm: React.FC = () => {
 
         {/* Buttons */}
         <div className="flex gap-3">
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition"
-          >
+          <Button type="submit" variant="primary" loading={loading} className="w-25">
             Add
-          </button>
-          <button
-            type="button"
-            onClick={() => reset()}
-            className="px-4 py-2 bg-gray-300 text-gray-800 font-medium rounded-md hover:bg-gray-400 transition"
-          >
+          </Button>
+
+          <Button type="button" variant="secondary" onClick={() => reset()}>
             Cancel
-          </button>
+          </Button>
         </div>
       </form>
     </div>

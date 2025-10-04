@@ -1,14 +1,17 @@
 // src/components/tasks/TaskCard.tsx
 import React from "react";
 import type { Task } from "../../types/common";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { markAsDone } from "../../redux/tasks/tasksSlice";
+import Button from "../Button";
+import type { RootState } from "../../redux/store";
 
 interface TaskCardProps {
   task: Task;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+  const { loading } = useSelector((state: RootState) => state.tasks);
   const dispatch = useDispatch();
   const markAsDoneHandler = () => {
     if (task) {
@@ -28,12 +31,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         </p>
       </div>
 
-      <button
-        className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
-        onClick={markAsDoneHandler}
-      >
+      <Button variant="success" onClick={markAsDoneHandler} loading={loading}>
         Done
-      </button>
+      </Button>
     </div>
   );
 };
