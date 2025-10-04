@@ -38,10 +38,14 @@ const taskSlice = createSlice({
       state.error = action.payload || "Failed to fetch tasks";
       state.tasksList = [];
     },
+
+    markAsDone: (state, _action: PayloadAction<string>) => {
+      state.loading = true;
+    },
   },
 });
 
-export const { createTask, getRecentTasks, getTasksSuccess, getTasksFail } =
+export const { createTask, getRecentTasks, getTasksSuccess, getTasksFail, markAsDone } =
   taskSlice.actions;
 
 export default taskSlice.reducer;

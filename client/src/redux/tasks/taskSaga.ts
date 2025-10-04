@@ -6,6 +6,7 @@ import {
   getRecentTasks,
   getTasksSuccess,
   getTasksFail,
+  markAsDone,
 } from "./tasksSlice";
 
 export function* createTaskSaga(action: {
@@ -44,9 +45,26 @@ export function* getRecentTasksSaga() {
   }
 }
 
+export function* markAsDoneSaga(action: {
+  type: string;
+  payload: string;
+}): Generator<any, void, any> {
+  try {
+    const taskId = action.payload;
+    const response = yield API.patch(`tasks/${taskId}/complete`);
+    if (response.status === 200) {
+      yield put(getRecentTasks());
+      //toast.success("Task Mark as done successfully");
+    }
+  } catch (e) {
+    //toast.error(e.response?.data?.message || "Error in updating Category");
+  }
+}
+
 function* watchTaskSaga() {
   yield takeLatest(createTask.type, createTaskSaga);
   yield takeLatest(getRecentTasks.type, getRecentTasksSaga);
+  yield takeLatest(markAsDone.type, markAsDoneSaga);
 }
 
 const taskSaga = [watchTaskSaga];
