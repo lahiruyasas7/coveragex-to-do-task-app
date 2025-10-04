@@ -1,7 +1,6 @@
-import { all } from "redux-saga/effects";
+import { all, fork } from "redux-saga/effects";
+import taskSaga from "./tasks/taskSaga";
 
 export default function* rootSaga() {
-  yield all([
-    //tasksSaga(), // add other sagas here if needed
-  ]);
+  yield all(taskSaga.map((s) => fork(s)));
 }
