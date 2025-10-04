@@ -8,6 +8,7 @@ import {
   getTasksFail,
   markAsDone,
 } from "./tasksSlice";
+import { toast } from "react-toastify";
 
 export function* createTaskSaga(action: {
   type: string;
@@ -17,7 +18,7 @@ export function* createTaskSaga(action: {
     const response = yield API.post(`tasks/create`, action.payload);
 
     if (response.status === 201) {
-      //toast.success("Sub Category added successfully");
+      toast.success("Task added successfully");
       yield put(getRecentTasks());
     }
   } catch (e: any) {
@@ -27,7 +28,7 @@ export function* createTaskSaga(action: {
     } else if (e?.response?.data?.error) {
       message = `${message}: ${e.response.data.error}`;
     }
-    //toast.error(message);
+    toast.error(message);
     console.error(e);
   }
 }
@@ -38,9 +39,9 @@ export function* getRecentTasksSaga() {
 
     yield put(getTasksSuccess(data));
   } catch (e: any) {
-    // toast.error(
-    //   e.response?.data?.message || "Error in retrieving Main Category data"
-    // );
+    toast.error(
+      e.response?.data?.message || "Error in retrieving Main Category data"
+    );
     yield put(getTasksFail(e.response?.data?.message || e.message));
   }
 }
@@ -54,10 +55,10 @@ export function* markAsDoneSaga(action: {
     const response = yield API.patch(`tasks/${taskId}/complete`);
     if (response.status === 200) {
       yield put(getRecentTasks());
-      //toast.success("Task Mark as done successfully");
+      toast.success("Task Mark as done successfully");
     }
-  } catch (e) {
-    //toast.error(e.response?.data?.message || "Error in updating Category");
+  } catch (e: any) {
+    toast.error(e.response?.data?.message || "Error in marking task as done");
   }
 }
 
