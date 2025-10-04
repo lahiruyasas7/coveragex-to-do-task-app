@@ -4,6 +4,8 @@ import type { SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { TaskFormInputs } from "../../types/common";
+import { useDispatch } from "react-redux";
+import { createTask } from "../../redux/tasks/tasksSlice";
 
 // --- Yup validation schema ---
 const taskSchema = yup.object({
@@ -20,8 +22,13 @@ const AddTaskForm: React.FC = () => {
     resolver: yupResolver(taskSchema),
   });
 
+  const dispatch = useDispatch();
+
   const onSubmit: SubmitHandler<TaskFormInputs> = (data) => {
     console.log("Form Data:", data);
+    if (data) {
+      dispatch(createTask(data));
+    }
     reset(); // Reset form after submit
   };
 
