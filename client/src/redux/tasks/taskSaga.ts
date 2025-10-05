@@ -40,7 +40,7 @@ export function* getRecentTasksSaga() {
     yield put(getTasksSuccess(data));
   } catch (e: any) {
     toast.error(
-      e.response?.data?.message || "Error in retrieving Main Category data"
+      e.response?.data?.message || "Error in retrieving Tasks"
     );
     yield put(getTasksFail(e.response?.data?.message || e.message));
   }
