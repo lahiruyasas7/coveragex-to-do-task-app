@@ -15,8 +15,9 @@ async function bootstrap() {
   app.enableCors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], //Allows cross-origin requests from your frontend (likely running on port 5173, e.g., Vite).
     credentials: true,
-    origin: process.env.REACT_APP_URL || 'http://localhost:5173',
+    origin: [process.env.REACT_APP_URL || 'http://localhost:5173', 'http://localhost:5173'],
   });
+  console.log('CORS origin:', process.env.REACT_APP_URL);
   await app.listen(configService.get('app.port'), () => {
     console.log(`Server running at port: ${configService.get('app.port')}`);
   });
